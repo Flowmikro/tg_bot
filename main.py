@@ -1,18 +1,48 @@
-import telebot , types
+import telebot, types
 from telebot import types
 import sqlite3
 
 bot = telebot.TeleBot('5990529068:AAHSDaOozhfSVo5YrGHRqxAKBvI1OkXJX3Q')
+name = ''
 
 
 @bot.message_handler(commands=['start'])
 def message_start(message):
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn1 = types.KeyboardButton('/help')
-    btn2 = types.KeyboardButton('/start')
-    btn3 = types.KeyboardButton('help')
-    markup.row(btn1, btn2, btn3)
-    bot.send_message(message.chat.id, 'Привет', reply_markup=markup)
+    conn = sqlite3.connect('start.sql')  # старт БД, храниться вся БД
+    cur = conn.cursor()  # с помощью него можно управлять БД
+    cur.execute(
+        'CREATE TABLE IF NOT EXISTS user (id int auto_increment primary key, name varchar(50), password varchar(50))'
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    bot.send_message(message.chat.id, 'Привет, дальше регистрация')
+    bot.register_next_step_handler(message, user_name)
+
+
+def user_name(message):
+    global name
+    name = message.text.strip()
+    bot.send_message(message.chat.id, 'Теперь придумай пароль)))')
+    bot.register_next_step_handler(message, user_password)
+
+
+def user_password(message):
+    password = message.text.strip()
+
+    conn = sqlite3.connect('start.sql')  # старт БД, храниться вся БД
+    cur = conn.cursor()  # с помощью него можно управлять БД
+    cur.execute(
+        'INSERT INTO user (name, password) VALUES ("%s", "%s")' % (name, password)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    markup = types.InlineKeyboardMarkup()
+    markup.add(types.InlineKeyboardMarkup('Список пользователей'))
+    bot.send_message(message.chat.id, 'Вы зареганы')
 
 
 @bot.message_handler(commands=['help'])
