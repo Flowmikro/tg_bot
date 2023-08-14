@@ -5,7 +5,7 @@ from telebot import types
 import sqlite3
 
 bot = telebot.TeleBot('5990529068:AAHSDaOozhfSVo5YrGHRqxAKBvI1OkXJX3Q')
-API = 'ba8721779b7dd2ff6a522ad14e069394'
+API = '##'
 
 
 @bot.message_handler(commands=['start'])
