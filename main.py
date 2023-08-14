@@ -1,11 +1,18 @@
-import telebot
+import telebot , types
+from telebot import types
+import sqlite3
 
 bot = telebot.TeleBot('5990529068:AAHSDaOozhfSVo5YrGHRqxAKBvI1OkXJX3Q')
 
 
 @bot.message_handler(commands=['start'])
 def message_start(message):
-    bot.send_message(message.chat.id, 'Привет')
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton('/help')
+    btn2 = types.KeyboardButton('/start')
+    btn3 = types.KeyboardButton('help')
+    markup.row(btn1, btn2, btn3)
+    bot.send_message(message.chat.id, 'Привет', reply_markup=markup)
 
 
 @bot.message_handler(commands=['help'])
