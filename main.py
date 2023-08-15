@@ -22,6 +22,7 @@ async def start(message: types.Message):
     markup.add(types.KeyboardButton('Открыть веб страницу', web_app=WebAppInfo(url='https://www.google.ru/')))
     await message.answer('Hi', reply_markup=markup)
 
+
 executor.start_polling(dp)
 
 # ВАЛЮТА БОТ
